@@ -1,0 +1,81 @@
+/* Miscellanoeous */
+body,
+html {
+  overflow-x: hidden;
+  padding-right: 0 !important; // resets padding right added by Bootstrap modal
+}
+
+*:-moz-full-screen,
+*:-webkit-full-screen,
+*:fullscreen *:-ms-fullscreen {
+  overflow: auto;
+}
+
+.container-scroller {
+  overflow: hidden;
+}
+
+pre {
+  background: color(gray-lighter);
+  padding: 15px;
+  font-size: 14px;
+}
+
+code {
+  padding: 5px;
+  color: theme-color(danger);
+  font-family: $type1;
+  font-weight: 300;
+  font-size: $default-font-size;
+  border-radius: 4px;
+}
+.purchase-popup {
+  @extend .grid-margin;
+  background: #fff;
+  padding: 15px 20px;
+  @include border-radius(3px);
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+
+  .btn {
+    margin-right: 20px;
+    font-weight: 500;
+    color: $white;
+    @include border-radius(5px);
+    @include transition-duration(0.2s);
+
+    &.download-button {
+      background: rgba(249, 249, 249, 0.7);
+      color: #969292;
+      border: 1px solid darken(#e4e4e4,5%);
+    }
+
+    &.purchase-button {
+      background-color: rgba(172, 50 ,228, 0.9);
+      @include background-image(theme-gradient-color(primary));
+      color: $white;
+      border: none;
+      line-height: 1;
+      vertical-align: middle;
+    }
+  }
+
+  p {
+    margin-bottom: auto;
+    margin-top: auto;
+    color: darken(#e4e4e4,40%);
+    font-weight: 400;
+    vertical-align: middle;
+    line-height: 1;
+  }
+
+  i {
+    vertical-align: middle;
+    line-height: 1;
+    margin: auto 0;
+    color: darken(#e4e4e4,20%);
+  }
+}
