@@ -158,7 +158,10 @@ app.get("/events", function (req, res) {
   res.flushHeaders();
 });
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/index.html");
+  res.sendFile(
+    "E:/0seminar/00final/Real-Time-Financial-Analysis-Trading-System/index.html"
+  );
+  // res.sendFile("index.html");
 });
 
 server.listen(8000, function () {
