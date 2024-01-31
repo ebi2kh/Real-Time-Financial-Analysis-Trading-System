@@ -1288,19 +1288,10 @@
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="js/dashboard.js"></script>
-
+    <script src="/socket.io/socket.io.js"></script>
     <!-- Custom js for this page-->
     <script src="js/chart.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    -->
-    <script>
-      var socket = io.connect("http://localhost:8000");
-      socket.on("newdata", function (data) {
-        console.log(data);
-        document.getElementById("data").innerHTML +=
-          JSON.stringify(data.data) + "<br>";
-      });
-    </script>
+
     <!-- End custom js for this page-->
   </body>
 </html>

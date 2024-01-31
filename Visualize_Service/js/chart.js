@@ -87,6 +87,14 @@ $(function () {
       },
     ],
   };
+
+  var socket = io.connect("http://localhost:8000");
+  socket.on("newdata", function (data) {
+    console.log(data);
+    document.getElementById("data").innerHTML +=
+      JSON.stringify(data.data) + "<br>";
+  });
+
   let options = {
     options: {
       responsive: true,

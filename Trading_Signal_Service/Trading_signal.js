@@ -101,7 +101,11 @@ const express = require("express");
 const app = express();
 const server = require("http").createServer(app);
 const io = socketIO(server);
-
+app.use(
+  express.static(
+    "E:/0seminar/00final/Real-Time-Financial-Analysis-Trading-System/Visualize_Service"
+  )
+);
 const Consumer = kafka.Consumer;
 const Producer = kafka.Producer;
 const client = new kafka.KafkaClient({ kafkaHost: "localhost:9092" });
@@ -159,7 +163,7 @@ app.get("/events", function (req, res) {
 });
 app.get("/", function (req, res) {
   res.sendFile(
-    "E:/0seminar/00final/Real-Time-Financial-Analysis-Trading-System/index.html"
+    "E:/0seminar/00final/Real-Time-Financial-Analysis-Trading-System/Visualize_Service/index.html"
   );
   // res.sendFile("index.html");
 });
