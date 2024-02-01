@@ -47,54 +47,46 @@ $(function () {
       },
     ],
   };
-  let multiLineData = {
-    labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-    datasets: [
-      {
-        label: "GOOGLE",
-        data: [12, 19, 3, 5, 2, 3],
-        borderColor: ["#587ce4"],
-        borderWidth: 2,
-        fill: false,
-      },
-      {
-        label: "TSLA",
-        data: [5, 23, 7, 12, 42, 23],
-        borderColor: ["#ede190"],
-        borderWidth: 2,
-        fill: false,
-      },
-      {
-        label: "AAPL",
-        data: [15, 10, 21, 32, 12, 33],
-        borderColor: ["#f44252"],
-        borderWidth: 2,
-        fill: false,
-      },
-      {
-        label: "AMZN",
-        data: [15, 45, 21, 33, 23, 33],
-        borderColor: ["#454345"],
-        borderWidth: 2,
-        fill: false,
-      },
-      {
-        label: "MSFT",
-        data: [15, 45, 21, 33, 23, 33],
-        borderColor: ["#454345"],
-        borderWidth: 2,
-        fill: false,
-      },
-    ],
-  };
-
-  var socket = io.connect("http://localhost:8000");
-  socket.on("newdata", function (data) {
-    console.log(data);
-    document.getElementById("data").innerHTML +=
-      JSON.stringify(data.data) + "<br>";
-  });
-
+  // let multiLineData = {
+  //   labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+  //   datasets: [
+  //     {
+  //       label: "GOOGLE",
+  //       data: [12, 19, 3, 5, 2, 3],
+  //       borderColor: ["#587ce4"],
+  //       borderWidth: 2,
+  //       fill: false,
+  //     },
+  //     {
+  //       label: "TSLA",
+  //       data: [5, 23, 7, 12, 42, 23],
+  //       borderColor: ["#ede190"],
+  //       borderWidth: 2,
+  //       fill: false,
+  //     },
+  //     {
+  //       label: "AAPL",
+  //       data: [15, 10, 21, 32, 12, 33],
+  //       borderColor: ["#f44252"],
+  //       borderWidth: 2,
+  //       fill: false,
+  //     },
+  //     {
+  //       label: "AMZN",
+  //       data: [15, 45, 21, 33, 23, 33],
+  //       borderColor: ["#454345"],
+  //       borderWidth: 2,
+  //       fill: false,
+  //     },
+  //     {
+  //       label: "MSFT",
+  //       data: [15, 45, 21, 33, 23, 33],
+  //       borderColor: ["#454345"],
+  //       borderWidth: 2,
+  //       fill: false,
+  //     },
+  //   ],
+  // };
   let options = {
     options: {
       responsive: true,
@@ -145,6 +137,170 @@ $(function () {
     //   },
     // },
   };
+  // ---------------------------------------------------------------
+  // var socket = io.connect("http://localhost:8000");
+  // socket.on("newdata", function (data) {
+  //   console.log(data);
+  //   document.getElementById("data").innerHTML +=
+  //     JSON.stringify(data.data) + "<br>";
+  // });
+  var lineChart5;
+  var multiLineData = {
+    labels: [],
+    datasets: [
+      {
+        label: "AAPL",
+        data: [],
+        borderColor: ["#587ce4"],
+        borderWidth: 2,
+        fill: false,
+      },
+      {
+        label: "GOOGL",
+        data: [],
+        borderColor: ["#ede190"],
+        borderWidth: 2,
+        fill: false,
+      },
+      {
+        label: "AMZN",
+        data: [],
+        borderColor: ["#f44252"],
+        borderWidth: 2,
+        fill: false,
+      },
+      {
+        label: "MSFT",
+        data: [],
+        borderColor: ["#454345"],
+        borderWidth: 2,
+        fill: false,
+      },
+      {
+        label: "TSLA",
+        data: [],
+        borderColor: ["#454345"],
+        borderWidth: 2,
+        fill: false,
+      },
+    ],
+  };
+
+  // var socket = io.connect("http://localhost:8000");
+
+  // socket.on("newdata", function (data) {
+  //   var receivedData;
+
+  //   if (typeof data.data === "string") {
+  //     try {
+  //       receivedData = JSON.parse(data.data);
+  //     } catch (error) {
+  //       console.error("Error parsing data:", error);
+  //       return;
+  //     }
+  //   } else if (typeof data.data === "object") {
+  //     receivedData = data.data;
+  //   } else {
+  //     console.error(
+  //       "Received data is neither an object nor a string:",
+  //       data.data
+  //     );
+  //     return;
+  //   }
+
+  //   console.log("Received data: ", receivedData);
+
+  //   // Check if data_type field is not present
+  //   // if (!receivedData.hasOwnProperty("data_type")) {
+  //   //   // Convert timestamp to a readable format
+  //   //   var date = new Date(receivedData.timestamp * 1000);
+  //   //   var hours = date.getHours();
+  //   //   var minutes = "0" + date.getMinutes();
+  //   //   var seconds = "0" + date.getSeconds();
+  //   //   var formattedTime =
+  //   //     hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
+
+  //   //   // Add the timestamp to the labels array
+  //   //   multiLineData.labels.push(formattedTime);
+
+  //   //   // Update the corresponding dataset
+  //   //   for (var i = 0; i < multiLineData.datasets.length; i++) {
+  //   //     if (multiLineData.datasets[i].label === receivedData.stock_symbol) {
+  //   //       multiLineData.datasets[i].data.push(receivedData.closing_price);
+  //   //     }
+  //   //   }
+
+  //   //   // Check if the lengths of the labels array and the data arrays match
+  //   //   for (var i = 0; i < multiLineData.datasets.length; i++) {
+  //   //     if (
+  //   //       multiLineData.labels.length !== multiLineData.datasets[i].data.length
+  //   //     ) {
+  //   //       console.error(
+  //   //         "Mismatch in lengths of labels and data arrays for dataset:",
+  //   //         multiLineData.datasets[i].label
+  //   //       );
+  //   //     }
+  //   //   }
+
+  //   //   // Update the chart
+  //   //   if (lineChart5) {
+  //   //     lineChart5.update();
+  //   //   } else {
+  //   //     console.log("Chart not initialized");
+  //   //   }
+  //   // }
+  //   // Check if data_type field is not present
+
+  //   // Check if data_type field is not present
+  //   if (!receivedData.hasOwnProperty("data_type")) {
+  //     // Get the current system time
+  //     var date = new Date();
+  //     var hours = date.getHours();
+  //     var minutes = "0" + date.getMinutes();
+  //     var seconds = "0" + date.getSeconds();
+  //     var formattedTime =
+  //       hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
+
+  //     // Add the current time to the labels array
+  //     multiLineData.labels.push(formattedTime);
+
+  //     // Update the corresponding dataset
+  //     for (var i = 0; i < multiLineData.datasets.length; i++) {
+  //       if (multiLineData.datasets[i].label === receivedData.stock_symbol) {
+  //         multiLineData.datasets[i].data.push(receivedData.closing_price);
+  //       } else {
+  //         // If the stock symbol does not match, push null
+  //         multiLineData.datasets[i].data.push(null);
+  //       }
+
+  //       // Filter out null values
+  //       multiLineData.datasets[i].data = multiLineData.datasets[i].data.filter(
+  //         (value) => value !== null
+  //       );
+  //     }
+
+  //     // Update the chart
+  //     if (lineChart5) {
+  //       lineChart5.update();
+  //     } else {
+  //       console.log("Chart not initialized");
+  //     }
+  //   }
+  // });
+
+  // if ($("#linechart-multi-main").length) {
+  //   var multiLineCanvas = $("#linechart-multi-main").get(0).getContext("2d");
+  //   lineChart5 = new Chart(multiLineCanvas, {
+  //     type: "line",
+  //     data: multiLineData,
+  //     options: options,
+  //   });
+  // } else {
+  //   console.error("Chart canvas not found");
+  // }
+
+  // --------------------------------------------------------------------
+
   let doughnutPieData = {
     datasets: [
       {
@@ -413,31 +569,31 @@ $(function () {
   // setInterval(function () {
   //   $.getJSON("http://localhost:5000/data", function (serverData) {
   //     // Check if the data is of the correct type
-  //     if (
-  //       !("data_type" in serverData) &&
-  //       "timestamp" in serverData &&
-  //       "closing_price" in serverData
-  //     ) {
-  //       console.log(serverData);
-  //       // // Convert the timestamp to a JavaScript Date object
-  //       // let date = new Date(serverData.timestamp * 1000);
+  // if (
+  //   !("data_type" in serverData) &&
+  //   "timestamp" in serverData &&
+  //   "closing_price" in serverData
+  // ) {
+  //   console.log(serverData);
+  //   // // Convert the timestamp to a JavaScript Date object
+  //   // let date = new Date(serverData.timestamp * 1000);
 
-  //       // // Update the chart's data and labels
-  //       // lineChart2.data.labels.push(date);
-  //       // lineChart2.data.datasets[0].data.push(serverData.closing_price);
+  //   // // Update the chart's data and labels
+  //   // lineChart2.data.labels.push(date);
+  //   // lineChart2.data.datasets[0].data.push(serverData.closing_price);
 
-  //       // Convert the timestamp to a JavaScript Date object
-  //       let date = new Date(serverData.timestamp * 1000);
+  //   // Convert the timestamp to a JavaScript Date object
+  //   let date = new Date(serverData.timestamp * 1000);
 
-  //       // Format the date to only display the time
-  //       let time = date.toTimeString().split(" ")[0];
-  //       console.log(time);
-  //       // Update the chart's data and labels
-  //       lineChart2.data.labels.push(time);
-  //       lineChart2.data.datasets[0].data.push(serverData.closing_price);
+  //   // Format the date to only display the time
+  //   let time = date.toTimeString().split(" ")[0];
+  //   console.log(time);
+  //   // Update the chart's data and labels
+  //   lineChart2.data.labels.push(time);
+  //   lineChart2.data.datasets[0].data.push(serverData.closing_price);
 
-  //       // Update the chart
-  //       lineChart2.update();
+  //   // Update the chart
+  //   lineChart2.update();
   //     }
   //   });
   // }, 2000);
@@ -792,6 +948,7 @@ $(function () {
   // });
   // -------------------------------------MAIN PAGE-------------------------------
   // Initialize an empty dataset for each stock symbol and each parameter
+
   let datasets = {
     AAPL: {
       label: "AAPL",
@@ -844,6 +1001,123 @@ $(function () {
       EMA: [],
       RSI: [],
       MA: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+  };
+
+  // --------------------------
+  var EMIlineChart;
+  let EMI_datasets = {
+    AAPL: {
+      label: "AAPL",
+      data: [],
+      borderColor: "#587ce4",
+      borderWidth: 2,
+      fill: false,
+    },
+    GOOGL: {
+      label: "GOOGL",
+      data: [],
+      borderColor: "#ede190",
+      borderWidth: 2,
+      fill: false,
+    },
+    AMZN: {
+      label: "AMZN",
+      data: [],
+      borderColor: "#f44252",
+      borderWidth: 2,
+      fill: false,
+    },
+    MSFT: {
+      label: "MSFT",
+      data: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+    TSLA: {
+      label: "TSLA",
+      data: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+  };
+
+  var RSIlineChart, MAlineChart;
+  let RSI_datasets = {
+    AAPL: {
+      label: "AAPL",
+      data: [],
+      borderColor: "#587ce4",
+      borderWidth: 2,
+      fill: false,
+    },
+    GOOGL: {
+      label: "GOOGL",
+      data: [],
+      borderColor: "#ede190",
+      borderWidth: 2,
+      fill: false,
+    },
+    AMZN: {
+      label: "AMZN",
+      data: [],
+      borderColor: "#f44252",
+      borderWidth: 2,
+      fill: false,
+    },
+    MSFT: {
+      label: "MSFT",
+      data: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+    TSLA: {
+      label: "TSLA",
+      data: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+  };
+
+  let MA_datasets = {
+    AAPL: {
+      label: "AAPL",
+      data: [],
+      borderColor: "#587ce4",
+      borderWidth: 2,
+      fill: false,
+    },
+    GOOGL: {
+      label: "GOOGL",
+      data: [],
+      borderColor: "#ede190",
+      borderWidth: 2,
+      fill: false,
+    },
+    AMZN: {
+      label: "AMZN",
+      data: [],
+      borderColor: "#f44252",
+      borderWidth: 2,
+      fill: false,
+    },
+    MSFT: {
+      label: "MSFT",
+      data: [],
+      borderColor: "#454345",
+      borderWidth: 2,
+      fill: false,
+    },
+    TSLA: {
+      label: "TSLA",
+      data: [],
       borderColor: "#454345",
       borderWidth: 2,
       fill: false,
@@ -919,23 +1193,23 @@ $(function () {
     });
   }
 
-  if ($("#EMI-main").length) {
-    var multiLineCanvas = $("#EMI-main").get(0).getContext("2d");
-    EMIChart = new Chart(multiLineCanvas, {
-      type: "line",
-      data: {
-        labels: [], // Initialize labels as empty
-        datasets: Object.values(datasets).map((dataset) => ({
-          label: dataset.label,
-          data: dataset.EMA,
-          borderColor: dataset.borderColor,
-          borderWidth: dataset.borderWidth,
-          fill: dataset.fill,
-        })),
-      },
-      options: options,
-    });
-  }
+  // if ($("#EMI-main").length) {
+  //   var multiLineCanvas = $("#EMI-main").get(0).getContext("2d");
+  //   EMIChart = new Chart(multiLineCanvas, {
+  //     type: "line",
+  //     data: {
+  //       labels: [], // Initialize labels as empty
+  //       datasets: Object.values(datasets).map((dataset) => ({
+  //         label: dataset.label,
+  //         data: dataset.EMA,
+  //         borderColor: dataset.borderColor,
+  //         borderWidth: dataset.borderWidth,
+  //         fill: dataset.fill,
+  //       })),
+  //     },
+  //     options: options,
+  //   });
+  // }
 
   if ($("#RSI-main").length) {
     var multiLineCanvas = $("#RSI-main").get(0).getContext("2d");
@@ -976,71 +1250,152 @@ $(function () {
   // // Fetch data from the server every 5 seconds
   // setInterval(function () {
   //   $.getJSON("http://localhost:5000/data", function (serverData) {
-  //     // Check if the data is of the correct type
-  //     if (
-  //       !("data_type" in serverData) &&
-  //       "timestamp" in serverData &&
-  //       "closing_price" in serverData &&
-  //       "stock_symbol" in serverData
-  //     ) {
-  //       // Check if the stock_symbol exists in the datasets object
-  //       if (serverData.stock_symbol in datasets) {
-  //         // Convert the timestamp to a JavaScript Date object
-  //         let date = new Date(serverData.timestamp * 1000);
+  // Check if the data is of the correct type
 
-  //         // Format the date to only display the time
-  //         let time = date.toTimeString().split(" ")[0];
+  var socket = io.connect("http://localhost:8000");
 
-  //         // Update the chart's labels and data
-  //         lineChart3.data.labels.push(time);
-  //         datasets[serverData.stock_symbol].data.push({
-  //           x: time,
-  //           y: serverData.closing_price,
-  //         });
-  //         console.log(serverData);
-  //         // Update the chart
-  //         lineChart3.update();
+  socket.on("newdata", function (data) {
+    let serverData = data.data;
+    console.log(serverData);
+    if (
+      !("data_type" in serverData) &&
+      "timestamp" in serverData &&
+      "closing_price" in serverData &&
+      "stock_symbol" in serverData
+    ) {
+      // Check if the stock_symbol exists in the datasets object
+      if (serverData.stock_symbol in datasets) {
+        // Convert the timestamp to a JavaScript Date object
+        let date = new Date(serverData.timestamp * 1000);
 
-  //         // Create a new table row
-  //         let row = `<tr>
-  //         <td>#ID</td>
-  //         <td>${serverData.stock_symbol}</td>
-  //         <td>${serverData.opening_price}</td>
-  //         <td>${serverData.closing_price}</td>
-  //         <td>${serverData.high}</td>
-  //         <td>${serverData.low}</td>
-  //         <td>${serverData.volume}</td>
-  //     </tr>`;
+        // Format the date to only display the time
+        let time = date.toTimeString().split(" ")[0];
 
-  //         // Add the new row to the table
-  //         $("#data-table tbody").append(row);
-  //       }
-  //     }
-  //   });
+        // Update the chart's labels and data
+        lineChart3.data.labels.push(time);
+
+        datasets[serverData.stock_symbol].data.push({
+          x: time,
+          y: serverData.closing_price,
+        });
+
+        // Update the EMI chart's labels and data
+        EMIlineChart.data.labels.push(time);
+        EMI_datasets[serverData.stock_symbol].data.push({
+          x: time,
+          y: serverData.exponential_moving_average,
+        });
+
+        // Update the RSI chart's labels and data
+        RSIlineChart.data.labels.push(time);
+        RSI_datasets[serverData.stock_symbol].data.push({
+          x: time,
+          y: serverData.rsi,
+        });
+
+        // Update the Moving Average chart's labels and data
+        MAlineChart.data.labels.push(time);
+        MA_datasets[serverData.stock_symbol].data.push({
+          x: time,
+          y: serverData.moving_average,
+        });
+
+        console.log(serverData);
+        // Update the chart
+        lineChart3.update();
+        EMIlineChart.update();
+        RSIlineChart.update();
+        MAlineChart.update();
+        // Create a new table row
+        let row = `<tr>
+          <td>#ID</td>
+          <td>${serverData.stock_symbol}</td>
+          <td>${serverData.opening_price}</td>
+          <td>${serverData.closing_price}</td>
+          <td>${serverData.high}</td>
+          <td>${serverData.low}</td>
+          <td>${serverData.volume}</td>
+      </tr>`;
+
+        // Add the new row to the table
+        $("#data-table tbody").append(row);
+
+        let row2 = `
+        <tr>
+              
+          <td>${serverData.stock_symbol}</td>
+          <td>${serverData.closing_price}</td>
+          <td>${serverData.volume}</td>
+          <td>${serverData.exponential_moving_average}</td>
+          <td>${serverData.moving_average}</td>
+          <td>${serverData.rsi}</td>
+          </tr>
+        `;
+        $("#data-table2 tbody").append(row2);
+      }
+    }
+  });
   // }, 2000);
 
-  // // Initialize the chart with the datasets
-  // if ($("#linechart-multi-main").length) {
-  //   let multiLineCanvas = $("#linechart-multi-main").get(0).getContext("2d");
-  //   lineChart3 = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: {
-  //       labels: [], // Initialize labels as empty
-  //       datasets: Object.values(datasets),
-  //     },
-  //     options: options,
-  //   });
-  // }
+  // Initialize the chart with the datasets
+  if ($("#linechart-multi-main").length) {
+    let multiLineCanvas = $("#linechart-multi-main").get(0).getContext("2d");
+    lineChart3 = new Chart(multiLineCanvas, {
+      type: "line",
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: Object.values(datasets),
+      },
+      options: options,
+    });
+  }
 
-  // // indicator in main page
+  // indicator in main page
   // if ($("#EMI-main").length) {
   //   let multiLineCanvas = $("#EMI-main").get(0).getContext("2d");
-  //   let lineChart = new Chart(multiLineCanvas, {
+  //   EMIlineChart = new Chart(multiLineCanvas, {
   //     type: "line",
   //     data: multiLineData,
   //     options: options,
   //   });
   // }
+
+  if ($("#EMI-main").length) {
+    let EMI_Canvas = $("#EMI-main").get(0).getContext("2d");
+    EMIlineChart = new Chart(EMI_Canvas, {
+      type: "line",
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: Object.values(EMI_datasets),
+      },
+      options: options,
+    });
+  }
+
+  if ($("#RSI-main").length) {
+    let RSI_Canvas = $("#RSI-main").get(0).getContext("2d");
+    RSIlineChart = new Chart(RSI_Canvas, {
+      type: "line",
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: Object.values(RSI_datasets),
+      },
+      options: options,
+    });
+  }
+
+  if ($("#moving-avg-main").length) {
+    let MA_Canvas = $("#moving-avg-main").get(0).getContext("2d");
+    MAlineChart = new Chart(MA_Canvas, {
+      type: "line",
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: Object.values(MA_datasets),
+      },
+      options: options,
+    });
+  }
+
   // if ($("#RSI-main").length) {
   //   let multiLineCanvas = $("#RSI-main").get(0).getContext("2d");
   //   let lineChart = new Chart(multiLineCanvas, {
