@@ -6,18 +6,21 @@ $(function () {
   "use strict";
   let data = {
     labels: [
-      "2013",
-      "2014",
-      "2014",
-      "2015",
-      "2016",
-      "2017",
-      "2013",
-      "2014",
-      "2014",
-      "2015",
-      "2016",
-      "2017",
+      "GOOGLE BUY",
+      "GOOGLE SELL",
+      "GOOGLE Natural",
+      "TSLA BUY",
+      "TSLA SELL",
+      "TSLA Natural",
+      "MSLF BUY",
+      "MSLF SELL",
+      "AAPL Natural",
+      "AAPL BUY",
+      "AAPL SELL",
+      "MSLF Natural",
+      "AMZN BUY",
+      "AMZN SELL",
+      "AMZN Natural",
     ],
     datasets: [
       {
@@ -507,15 +510,15 @@ $(function () {
     },
   };
   // Get context with jQuery - using jQuery's .get() method.
-  if ($("#barChart").length) {
-    let barChartCanvas = $("#barChart").get(0).getContext("2d");
-    // This will get the first returned node in the jQuery collection.
-    let barChart = new Chart(barChartCanvas, {
-      type: "bar",
-      data: data,
-      options: options,
-    });
-  }
+  // if ($("#barChart").length) {
+  //   let barChartCanvas = $("#barChart").get(0).getContext("2d");
+  //   // This will get the first returned node in the jQuery collection.
+  //   let barChart = new Chart(barChartCanvas, {
+  //     type: "bar",
+  //     data: data,
+  //     options: options,
+  //   });
+  // }
 
   // if ($("#lineChart").length) {
   //   let lineChartCanvas = $("#lineChart").get(0).getContext("2d");
@@ -1476,7 +1479,8 @@ $(function () {
   //     },
   //   });
   // }
-
+  var pieChart;
+  var barChart;
   socket.on("newdata", function (data) {
     let serverData = data.data;
     console.log(serverData);
@@ -1493,6 +1497,51 @@ $(function () {
 
         // Format the date to only display the time
         let time = date.toTimeString().split(" ")[0];
+        let signalType = serverData.signal.toLowerCase(); // Assuming signal is in lower case
+        let datasetIndex = ["natural", "sell", "buy"].indexOf(signalType);
+        if (datasetIndex !== -1) {
+          pieChart.data.datasets[0].data[datasetIndex]++;
+          pieChart.update();
+        }
+        // Update the chart's labels and data
+        let labelIndex = -1;
+        switch (serverData.signal.toLowerCase()) {
+          case "buy":
+            labelIndex = [
+              "GOOGL BUY",
+              "TSLA BUY",
+              "MSLF BUY",
+              "AAPL BUY",
+              "AMZN BUY",
+            ].indexOf(`${serverData.stock_symbol} BUY`);
+            break;
+          case "sell":
+            labelIndex = [
+              "GOOGL SELL",
+              "TSLA SELL",
+              "MSLF SELL",
+              "AAPL SELL",
+              "AMZN SELL",
+            ].indexOf(`${serverData.stock_symbol} SELL`);
+            break;
+          case "natural":
+            labelIndex = [
+              "GOOGL Natural",
+              "TSLA Natural",
+              "MSLF Natural",
+              "AAPL Natural",
+              "AMZN Natural",
+            ].indexOf(`${serverData.stock_symbol} Natural`);
+
+            break;
+          default:
+            break;
+        }
+
+        if (labelIndex !== -1) {
+          barChart.data.datasets[0].data[labelIndex]++;
+          barChart.update();
+        }
 
         // Update the chart's labels and data
         lineChart3.data.labels.push(time);
@@ -1532,7 +1581,7 @@ $(function () {
         // ///////////////////////////////////
         // Create a new table row
         let row = `<tr>
-          <td>#ID</td>
+          
           <td>${serverData.stock_symbol}</td>
           <td>${serverData.opening_price}</td>
           <td>${serverData.closing_price}</td>
@@ -1556,6 +1605,20 @@ $(function () {
           </tr>
         `;
         $("#data-table2 tbody").append(row2);
+        let date2 = new Date(serverData.timestamp * 1000);
+
+        // Format the date to only display the time
+        let time2 = date2.toTimeString().split(" ")[0];
+        let Latest_trading_signal = `
+        
+          <tr>
+          
+          <td>${time2}</td>
+          <td>${serverData.stock_symbol}</td>
+          <td>${serverData.signal}</td>
+          </tr>
+        `;
+        $("#latest-signal tbody").append(Latest_trading_signal);
       }
     }
   });
@@ -1573,16 +1636,6 @@ $(function () {
       options: options,
     });
   }
-
-  // indicator in main page
-  // if ($("#EMI-main").length) {
-  //   let multiLineCanvas = $("#EMI-main").get(0).getContext("2d");
-  //   EMIlineChart = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: multiLineData,
-  //     options: options,
-  //   });
-  // }
 
   if ($("#EMI-main").length) {
     let EMI_Canvas = $("#EMI-main").get(0).getContext("2d");
@@ -1619,178 +1672,74 @@ $(function () {
       options: options,
     });
   }
-  // --------------------------------------
-  if ($("#google-main").length) {
-    let lineChartCanvas = $("#google-main").get(0).getContext("2d");
-    googleMainChart = new Chart(lineChartCanvas, {
-      type: "line",
-      data: {
-        labels: [], // Initialize labels as empty
-        datasets: [
-          {
-            label: "Closing Price", // Change label to "Closing Price"
-            data: [], // Initialize data as empty
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          x: {
-            type: "time",
-            time: {
-              unit: "second",
-            },
-          },
-        },
-      },
-    });
-  }
 
-  if ($("#emi-google").length) {
-    let lineChartCanvas = $("#emi-google").get(0).getContext("2d");
-    emiGoogleChart = new Chart(lineChartCanvas, {
-      type: "line",
-      data: {
-        labels: [], // Initialize labels as empty
-        datasets: [
-          {
-            label: "EMI", // Change label to "EMI"
-            data: [], // Initialize data as empty
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          x: {
-            type: "time",
-          },
-        },
-      },
-    });
-  }
-
-  if ($("#RSI-google2").length) {
-    let lineChartCanvas = $("#RSI-google2").get(0).getContext("2d");
-    rsiGoogleChart = new Chart(lineChartCanvas, {
-      type: "line",
-      data: {
-        labels: [], // Initialize labels as empty
-        datasets: [RSI_GOOGLE], // Use the RSI_GOOGLE dataset
-      },
-      options: {
-        scales: {
-          x: {
-            type: "time",
-          },
-        },
-      },
-    });
-  }
-
-  if ($("#moving-avg-google").length) {
-    let lineChartCanvas = $("#moving-avg-google").get(0).getContext("2d");
-    movingAvgGoogleChart = new Chart(lineChartCanvas, {
-      type: "line",
-      data: {
-        labels: [], // Initialize labels as empty
-        datasets: [
-          {
-            label: "Moving Average", // Change label to "Moving Average"
-            data: [], // Initialize data as empty
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          x: {
-            type: "time",
-          },
-        },
-      },
-    });
-  }
-
-  // ----------------------------------------
-  // stocks.forEach(function (stock) {
-  //   // Initialize the main chart
-  //   if ($("#" + stock + "-main").length) {
-  //     let lineChartCanvas = $("#" + stock + "-main")
-  //       .get(0)
-  //       .getContext("2d");
-  //     charts[stock + "-main"] = new Chart(lineChartCanvas, {
-  //       options: options2,
-  //     });
-  //   }
-
-  //   // Initialize the EMI chart
-  //   if ($("#emi-" + stock).length) {
-  //     let lineChartCanvas = $("#emi-" + stock)
-  //       .get(0)
-  //       .getContext("2d");
-  //     charts["emi-" + stock] = new Chart(lineChartCanvas, {
-  //       options: options2,
-  //     });
-  //   }
-
-  //   // Initialize the RSI chart
-  //   if ($("#RSI-" + stock).length) {
-  //     let lineChartCanvas = $("#RSI-" + stock)
-  //       .get(0)
-  //       .getContext("2d");
-  //     charts["RSI-" + stock] = new Chart(lineChartCanvas, {
-  //       options: options2,
-  //     });
-  //   }
-
-  //   // Initialize the Moving Average chart
-  //   if ($("#moving-avg-" + stock).length) {
-  //     let lineChartCanvas = $("#moving-avg-" + stock)
-  //       .get(0)
-  //       .getContext("2d");
-  //     charts["moving-avg-" + stock] = new Chart(lineChartCanvas, {
-  //       options: options2,
-  //     });
-  //   }
-  // });
-
-  // if ($("#RSI-main").length) {
-  //   let multiLineCanvas = $("#RSI-main").get(0).getContext("2d");
-  //   let lineChart = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: multiLineData,
-  //     options: options,
-  //   });
-  // }
-  // if ($("#moving-avg-main").length) {
-  //   let multiLineCanvas = $("#moving-avg-main").get(0).getContext("2d");
-  //   let lineChart = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: multiLineData,
-  //     options: options,
-  //   });
-  // }
-
-  // // =========================
   if ($("#pieChart-main").length) {
     let pieChartCanvas = $("#pieChart-main").get(0).getContext("2d");
-    let pieChart = new Chart(pieChartCanvas, {
+    pieChart = new Chart(pieChartCanvas, {
       type: "pie",
-      data: doughnutPieData,
-      options: doughnutPieOptions,
+      data: {
+        labels: ["Natural", "Sell", "Buy"],
+        datasets: [
+          {
+            data: [0, 0, 0],
+            backgroundColor: ["#36a2eb", "#ff6384", "#ffcd56"],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+      },
     });
   }
+
+  // Initialize the bar chart
+  if ($("#barChart").length) {
+    let barChartCanvas = $("#barChart").get(0).getContext("2d");
+    // This will get the first returned node in the jQuery collection.
+    barChart = new Chart(barChartCanvas, {
+      type: "bar",
+      data: {
+        labels: [
+          "GOOGLE BUY",
+          "GOOGLE SELL",
+          "GOOGLE Natural",
+          "TSLA BUY",
+          "TSLA SELL",
+          "TSLA Natural",
+          "MSLF BUY",
+          "MSLF SELL",
+          "MSLF Natural",
+          "AAPL BUY",
+          "AAPL SELL",
+          "AAPL Natural",
+          "AMZN BUY",
+          "AMZN SELL",
+          "AMZN Natural",
+        ],
+        datasets: [
+          {
+            label: "Frequency",
+            data: Array(15).fill(0), // Initialize with zeros for each label
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: options,
+    });
+  }
+  // // =========================
+  // if ($("#pieChart-main").length) {
+  //   let pieChartCanvas = $("#pieChart-main").get(0).getContext("2d");
+  //   pieChart = new Chart(pieChartCanvas, {
+  //     type: "pie",
+  //     data: doughnutPieData,
+  //     options: doughnutPieOptions,
+  //   });
+  // }
   // // =========================
 
   // ---------------------------------------------------------------------------------------
