@@ -7,7 +7,7 @@ const client = new kafka.KafkaClient({ kafkaHost: "localhost:9092" });
 // Create a Kafka consumer
 const consumer = new kafka.Consumer(
   client,
-  [{ topic: "your_topic_name", partition: 0 }],
+  [{ topic: "nytopic", partition: 0 }],
   { autoCommit: true }
 );
 
