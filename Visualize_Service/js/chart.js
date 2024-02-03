@@ -87,6 +87,7 @@ $(function () {
   //     },
   //   ],
   // };
+  var lineChart3;
   let options = {
     options: {
       responsive: true,
@@ -537,7 +538,7 @@ $(function () {
 
   if ($("#demo").length) {
     let lineChartCanvas = $("#demo").get(0).getContext("2d");
-    lineChart2 = new Chart(lineChartCanvas, {
+    let lineChart2 = new Chart(lineChartCanvas, {
       type: "line",
       data: {
         labels: [], // Initialize labels as empty
@@ -564,6 +565,167 @@ $(function () {
       },
     });
   }
+
+  // var stocks = ["google", "tesla", "microsoft", "aapl", "amzn"];
+  // stocks.forEach(function (stock) {
+  //   // Initialize the main chart
+  //   if ($("#" + stock + "-main").length) {
+  //     let lineChartCanvas = $("#" + stock + "-main")
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: {
+  //         labels: [], // Initialize labels as empty
+  //         datasets: [
+  //           {
+  //             label: "Closing Price", // Change label to "Closing Price"
+  //             data: [], // Initialize data as empty
+  //             backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //             borderColor: "rgba(75, 192, 192, 1)",
+  //             borderWidth: 1,
+  //             fill: false,
+  //           },
+  //         ],
+  //       },
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //             time: {
+  //               unit: "second",
+  //             },
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the EMI chart
+  //   if ($("#emi-" + stock).length) {
+  //     let lineChartCanvas = $("#emi-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the RSI chart
+  //   if ($("#RSI-" + stock).length) {
+  //     let lineChartCanvas = $("#RSI-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the Moving Average chart
+  //   if ($("#moving-avg-" + stock).length) {
+  //     let lineChartCanvas = $("#moving-avg-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+  // });
+  var options2 = {
+    responsive: true,
+    title: {
+      display: true,
+      text: "Chart.js Line Chart",
+    },
+    tooltips: {
+      mode: "index",
+      intersect: false,
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
+    },
+    scales: {
+      xAxes: [
+        {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: "Month",
+          },
+        },
+      ],
+      yAxes: [
+        {
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: "Value",
+          },
+        },
+      ],
+    },
+  };
+
+  // /////////////////////////////////////////////
+  var stocks = ["google", "tesla", "microsoft", "aapl", "amzn"];
+  var charts = {};
+
+  // ///////////////////////////////////////////////
+
+  // if ($("#google-main").length) {
+  //   let lineChartCanvas = $("#google-main").get(0).getContext("2d");
+  //   let lineChart2 = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: {
+  //       labels: [], // Initialize labels as empty
+  //       datasets: [
+  //         {
+  //           label: "Closing Price", // Change label to "Closing Price"
+  //           data: [], // Initialize data as empty
+  //           backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //           borderColor: "rgba(75, 192, 192, 1)",
+  //           borderWidth: 1,
+  //           fill: false,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //           time: {
+  //             unit: "second",
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
   // // Fetch data from the server every 5 seconds
   // setInterval(function () {
@@ -734,7 +896,7 @@ $(function () {
   // }
   // ---------------------------------------
   // Initialize an empty dataset for each stock symbol
-  let lineChart3;
+
   // let datasets = {
   //   AAPL: {
   //     label: "AAPL",
@@ -1046,6 +1208,7 @@ $(function () {
       fill: false,
     },
   };
+  var googleMainChart, emiGoogleChart, rsiGoogleChart, movingAvgGoogleChart;
 
   var RSIlineChart, MAlineChart;
   let RSI_datasets = {
@@ -1253,6 +1416,66 @@ $(function () {
   // Check if the data is of the correct type
 
   var socket = io.connect("http://localhost:8000");
+  let RSI_GOOGLE = {
+    GOOGL: {
+      label: "GOOGL",
+      data: [],
+      borderColor: "#ede190",
+      borderWidth: 2,
+      fill: false,
+    },
+  };
+
+  var rsiGoogleChart;
+
+  // socket.on("newdata", function (data) {
+  //   let serverData = data.data;
+  //   console.log(serverData);
+  //   if (
+  //     !("data_type" in serverData) &&
+  //     "timestamp" in serverData &&
+  //     "rsi" in serverData &&
+  //     "stock_symbol" in serverData
+  //   ) {
+  //     // Update RSI chart for Google
+  //     if (serverData.stock_symbol === "GOOGL") {
+  //       let date = new Date(serverData.timestamp * 1000);
+  //       let time = date.toTimeString().split(" ")[0];
+  //       lineChart3.data.labels.push(time);
+  //       rsiGoogleChart.data.labels.push(time);
+  //       datasets["GOOGL"].data.push({
+  //         x: time,
+  //         y: serverData.closing_price,
+  //       });
+
+  //       RSI_GOOGLE.GOOGL.data.push({
+  //         x: time,
+  //         y: serverData.rsi,
+  //       });
+  //       rsiGoogleChart.update();
+  //     }
+  //   }
+  // });
+
+  // Initialize the RSI chart for Google
+  // Initialize the RSI chart for Google
+  // if ($("#RSI-google").length) {
+  //   let lineChartCanvas = $("#RSI-google").get(0).getContext("2d");
+  //   rsiGoogleChart = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: {
+  //       labels: [], // Initialize labels as empty
+  //       datasets: Object.values(RSI_GOOGLE),
+  //     },
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
   socket.on("newdata", function (data) {
     let serverData = data.data;
@@ -1273,7 +1496,6 @@ $(function () {
 
         // Update the chart's labels and data
         lineChart3.data.labels.push(time);
-
         datasets[serverData.stock_symbol].data.push({
           x: time,
           y: serverData.closing_price,
@@ -1306,6 +1528,8 @@ $(function () {
         EMIlineChart.update();
         RSIlineChart.update();
         MAlineChart.update();
+
+        // ///////////////////////////////////
         // Create a new table row
         let row = `<tr>
           <td>#ID</td>
@@ -1322,7 +1546,7 @@ $(function () {
 
         let row2 = `
         <tr>
-              
+
           <td>${serverData.stock_symbol}</td>
           <td>${serverData.closing_price}</td>
           <td>${serverData.volume}</td>
@@ -1395,42 +1619,10 @@ $(function () {
       options: options,
     });
   }
-
-  // if ($("#RSI-main").length) {
-  //   let multiLineCanvas = $("#RSI-main").get(0).getContext("2d");
-  //   let lineChart = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: multiLineData,
-  //     options: options,
-  //   });
-  // }
-  // if ($("#moving-avg-main").length) {
-  //   let multiLineCanvas = $("#moving-avg-main").get(0).getContext("2d");
-  //   let lineChart = new Chart(multiLineCanvas, {
-  //     type: "line",
-  //     data: multiLineData,
-  //     options: options,
-  //   });
-  // }
-
-  // // =========================
-  // if ($("#pieChart-main").length) {
-  //   let pieChartCanvas = $("#pieChart-main").get(0).getContext("2d");
-  //   let pieChart = new Chart(pieChartCanvas, {
-  //     type: "pie",
-  //     data: doughnutPieData,
-  //     options: doughnutPieOptions,
-  //   });
-  // }
-  // // =========================
-
-  // ---------------------------------------------------------------------------------------
-
-  // -------------------------------------GOOGLE PAGE-------------------------------
-
+  // --------------------------------------
   if ($("#google-main").length) {
     let lineChartCanvas = $("#google-main").get(0).getContext("2d");
-    lineChart2 = new Chart(lineChartCanvas, {
+    googleMainChart = new Chart(lineChartCanvas, {
       type: "line",
       data: {
         labels: [], // Initialize labels as empty
@@ -1458,13 +1650,23 @@ $(function () {
     });
   }
 
-  // indicator in main page
   if ($("#emi-google").length) {
     let lineChartCanvas = $("#emi-google").get(0).getContext("2d");
-    let lineChart = new Chart(lineChartCanvas, {
+    emiGoogleChart = new Chart(lineChartCanvas, {
       type: "line",
-      data: data,
-      // options: options
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: [
+          {
+            label: "EMI", // Change label to "EMI"
+            data: [], // Initialize data as empty
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+            fill: false,
+          },
+        ],
+      },
       options: {
         scales: {
           x: {
@@ -1474,12 +1676,15 @@ $(function () {
       },
     });
   }
-  if ($("#RSI-google").length) {
-    let lineChartCanvas = $("#RSI-google").get(0).getContext("2d");
-    let lineChart = new Chart(lineChartCanvas, {
+
+  if ($("#RSI-google2").length) {
+    let lineChartCanvas = $("#RSI-google2").get(0).getContext("2d");
+    rsiGoogleChart = new Chart(lineChartCanvas, {
       type: "line",
-      data: data,
-      // options: options
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: [RSI_GOOGLE], // Use the RSI_GOOGLE dataset
+      },
       options: {
         scales: {
           x: {
@@ -1489,12 +1694,24 @@ $(function () {
       },
     });
   }
+
   if ($("#moving-avg-google").length) {
     let lineChartCanvas = $("#moving-avg-google").get(0).getContext("2d");
-    let lineChart = new Chart(lineChartCanvas, {
+    movingAvgGoogleChart = new Chart(lineChartCanvas, {
       type: "line",
-      data: data,
-      // options: options
+      data: {
+        labels: [], // Initialize labels as empty
+        datasets: [
+          {
+            label: "Moving Average", // Change label to "Moving Average"
+            data: [], // Initialize data as empty
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+            fill: false,
+          },
+        ],
+      },
       options: {
         scales: {
           x: {
@@ -1504,6 +1721,248 @@ $(function () {
       },
     });
   }
+
+  // ----------------------------------------
+  // stocks.forEach(function (stock) {
+  //   // Initialize the main chart
+  //   if ($("#" + stock + "-main").length) {
+  //     let lineChartCanvas = $("#" + stock + "-main")
+  //       .get(0)
+  //       .getContext("2d");
+  //     charts[stock + "-main"] = new Chart(lineChartCanvas, {
+  //       options: options2,
+  //     });
+  //   }
+
+  //   // Initialize the EMI chart
+  //   if ($("#emi-" + stock).length) {
+  //     let lineChartCanvas = $("#emi-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     charts["emi-" + stock] = new Chart(lineChartCanvas, {
+  //       options: options2,
+  //     });
+  //   }
+
+  //   // Initialize the RSI chart
+  //   if ($("#RSI-" + stock).length) {
+  //     let lineChartCanvas = $("#RSI-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     charts["RSI-" + stock] = new Chart(lineChartCanvas, {
+  //       options: options2,
+  //     });
+  //   }
+
+  //   // Initialize the Moving Average chart
+  //   if ($("#moving-avg-" + stock).length) {
+  //     let lineChartCanvas = $("#moving-avg-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     charts["moving-avg-" + stock] = new Chart(lineChartCanvas, {
+  //       options: options2,
+  //     });
+  //   }
+  // });
+
+  // if ($("#RSI-main").length) {
+  //   let multiLineCanvas = $("#RSI-main").get(0).getContext("2d");
+  //   let lineChart = new Chart(multiLineCanvas, {
+  //     type: "line",
+  //     data: multiLineData,
+  //     options: options,
+  //   });
+  // }
+  // if ($("#moving-avg-main").length) {
+  //   let multiLineCanvas = $("#moving-avg-main").get(0).getContext("2d");
+  //   let lineChart = new Chart(multiLineCanvas, {
+  //     type: "line",
+  //     data: multiLineData,
+  //     options: options,
+  //   });
+  // }
+
+  // // =========================
+  if ($("#pieChart-main").length) {
+    let pieChartCanvas = $("#pieChart-main").get(0).getContext("2d");
+    let pieChart = new Chart(pieChartCanvas, {
+      type: "pie",
+      data: doughnutPieData,
+      options: doughnutPieOptions,
+    });
+  }
+  // // =========================
+
+  // ---------------------------------------------------------------------------------------
+
+  // -------------------------------------GOOGLE PAGE-------------------------------
+
+  // var stocks = ["google", "tesla", "microsoft", "aapl", "amzn"];
+  // stocks.forEach(function (stock) {
+  //   // Initialize the main chart
+  //   if ($("#" + stock + "-main").length) {
+  //     let lineChartCanvas = $("#" + stock + "-main")
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: {
+  //         labels: [], // Initialize labels as empty
+  //         datasets: [
+  //           {
+  //             label: "Closing Price", // Change label to "Closing Price"
+  //             data: [], // Initialize data as empty
+  //             backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //             borderColor: "rgba(75, 192, 192, 1)",
+  //             borderWidth: 1,
+  //             fill: false,
+  //           },
+  //         ],
+  //       },
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //             time: {
+  //               unit: "second",
+  //             },
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the EMI chart
+  //   if ($("#emi-" + stock).length) {
+  //     let lineChartCanvas = $("#emi-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the RSI chart
+  //   if ($("#RSI-" + stock).length) {
+  //     let lineChartCanvas = $("#RSI-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+
+  //   // Initialize the Moving Average chart
+  //   if ($("#moving-avg-" + stock).length) {
+  //     let lineChartCanvas = $("#moving-avg-" + stock)
+  //       .get(0)
+  //       .getContext("2d");
+  //     let lineChart = new Chart(lineChartCanvas, {
+  //       type: "line",
+  //       data: data,
+  //       options: {
+  //         scales: {
+  //           x: {
+  //             type: "time",
+  //           },
+  //         },
+  //       },
+  //     });
+  //   }
+  // });
+
+  // if ($("#google-main").length) {
+  //   let lineChartCanvas = $("#google-main").get(0).getContext("2d");
+  //   lineChart2 = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: {
+  //       labels: [], // Initialize labels as empty
+  //       datasets: [
+  //         {
+  //           label: "Closing Price", // Change label to "Closing Price"
+  //           data: [], // Initialize data as empty
+  //           backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //           borderColor: "rgba(75, 192, 192, 1)",
+  //           borderWidth: 1,
+  //           fill: false,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //           time: {
+  //             unit: "second",
+  //           },
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+
+  // // indicator in main page
+  // if ($("#emi-google").length) {
+  //   let lineChartCanvas = $("#emi-google").get(0).getContext("2d");
+  //   let lineChart = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: data,
+  //     // options: options
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+  // if ($("#RSI-google").length) {
+  //   let lineChartCanvas = $("#RSI-google").get(0).getContext("2d");
+  //   let lineChart = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: data,
+  //     // options: options
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
+  // if ($("#moving-avg-google").length) {
+  //   let lineChartCanvas = $("#moving-avg-google").get(0).getContext("2d");
+  //   let lineChart = new Chart(lineChartCanvas, {
+  //     type: "line",
+  //     data: data,
+  //     // options: options
+  //     options: {
+  //       scales: {
+  //         x: {
+  //           type: "time",
+  //         },
+  //       },
+  //     },
+  //   });
+  // }
 
   if ($("#sentiment-google").length) {
     let lineChartCanvas = $("#sentiment-google").get(0).getContext("2d");
