@@ -422,8 +422,6 @@ These mandatory trading indicators play a vital role in the decision-making proc
 
 ---
 
----
-
 ##Setting Up the Project
 
 **Instructions for Setting Up the Project**
