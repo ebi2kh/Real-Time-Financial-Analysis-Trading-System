@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation
+  template:
+    metadata:
+      labels:
+        app: aggregation
+    spec:
+      containers:
+      - name: aggregation
+        image: eb2kh/aggregation
+        ports:
+        - containerPort: 8000

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualize-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visualize-service
+  template:
+    metadata:
+      labels:
+        app: visualize-service
+    spec:
+      containers:
+      - name: visualize-service
+        image: eb2kh/visualize
+        ports:
+        - containerPort: 8000

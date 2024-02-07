@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-processing-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: streaming-processing
+  template:
+    metadata:
+      labels:
+        app: streaming-processing
+    spec:
+      containers:
+        - name: streaming-processing
+          image: eb2kh/streaming-processing:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"

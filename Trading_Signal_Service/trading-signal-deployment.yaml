@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trading-signal-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: trading-signal
+  template:
+    metadata:
+      labels:
+        app: trading-signal
+    spec:
+      containers:
+        - name: trading-signal
+          image: your-eb2kh/trading-signal:latest
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.25"
+              memory: "256Mi"
+         

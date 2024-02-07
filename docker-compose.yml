@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: "exit 0"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  generator:
+    build: ./generator
+    container_name: generator
+    depends_on:
+      - kafka
+
+  ingestion:
+    build: ./ingestion
+    container_name: ingestion
+    depends_on:
+      - kafka
+
+  streaming-processing:
+    build: ./streaming-processing
+    container_name: streaming-processing
+    depends_on:
+      - kafka
+
+  trading-signal:
+    build: ./trading-signal
+    container_name: trading-signal
+    depends_on:
+      - kafka
+
+  visualize-signal:
+    build: ./visualize-signal
+    container_name: visualize-signal
+    depends_on:
+      - kafka
